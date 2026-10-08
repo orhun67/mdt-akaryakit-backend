@@ -1,0 +1,31 @@
+name: MDT Akaryakit Monitor
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    - cron: "0 * * * *"
+
+jobs:
+  fuel-monitor:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository kodunu al
+        uses: actions/checkout@v4
+
+      - name: Python kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Python kutuphanelerini kur
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: MDT Akaryakit backend calistir
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          python main.py
